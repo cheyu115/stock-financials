@@ -1,11 +1,14 @@
 import datetime
+
 from stock import StockStatistics, calculate_pe_ratio, calculate_peg_ratio
+from utils import get_float, get_string
 
 def main():
-    ticker  = input("stock: ").upper()
-    price = float(input("price: "))
-    eps = float(input("eps: "))
-    eps_growth = float(input("growth rate (%): "))
+    ticker  = get_string('ticker: ')
+    price = get_float('price: ')
+    eps = get_float('eps: ')
+    eps_growth = get_float('growth rate (%): ')
+
     pe_ratio = calculate_pe_ratio(price, eps)
     peg_ratio = calculate_peg_ratio(pe_ratio, eps_growth)
     today_str = str(datetime.date.today())
