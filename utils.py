@@ -1,6 +1,6 @@
 def get_string(prompt: str) -> str:
     """
-    Prompts the user for a string input and ensure it's not empty.
+    Prompts the user for a string input and ensures it's not empty.
     Continuously retries if the user enters an empty string.
     """
     while True:

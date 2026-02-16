@@ -25,7 +25,8 @@ class StockStatistics:
         return f'[{self.date}: Price={self.price}, PE={self.pe_ratio}, PEG={self.peg_ratio}]'
     
 def calculate_pe_ratio(price: float, eps: float) -> float:
-    """Calculate the price to earnings (PE) ratio.
+    """
+    Calculate the price to earnings (PE) ratio.
     Formula: price / EPS
 
     >>> calculate_pe_ratio(400, 0)
@@ -39,7 +40,8 @@ def calculate_pe_ratio(price: float, eps: float) -> float:
 
 
 def calculate_peg_ratio(pe_ratio: float, eps_growth: float) -> float:
-    """calcalate the PEG ratio.
+    """
+    Calculate the PEG ratio.
     Formula: PE ratio / growth rate
 
     growth rate: yahoo finance analysis -> growth estimates -> next year column
