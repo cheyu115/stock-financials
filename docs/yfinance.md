@@ -16,3 +16,4 @@
 
 1. 目前的程式碼在 `info.get('earningsGrowth') or 0.0` 抓取了 "Current Qtr. Growth Estimates"。我想要的是 "Next Year Growth Estimates"
 2. 還是有落差，甚至錯誤更大了，這是Statistics分頁中的`Quarterly Earnings Growth  (yoy)`。我要的是Analysis分頁中的表格提供了 `Current Qtr., Next Qtr., Current Year, Next Year` 四欄中，我只要最右邊 Next Year 一欄
+3. 在 yfinance_fetcher 中我們應該要清洗我們使用在 dataclass 中的資料，我只要保留小數點後兩位。

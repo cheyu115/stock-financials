@@ -60,9 +60,9 @@ def fetch_stock_data(ticker_symbol: str) -> Optional[YfinanceData]:
         pass
 
     return YfinanceData(
-        price=float(price),
-        eps=float(eps),
-        eps_growth=float(eps_growth)
+        price=round(float(price), 2),
+        eps=round(float(eps), 2),
+        eps_growth=round(float(eps_growth), 2)
     )
 
 if __name__ == '__main__':
