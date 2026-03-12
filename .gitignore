@@ -10,5 +10,4 @@ wheels/
 .venv
 
 # db
-history.csv
-history.db
+data/
