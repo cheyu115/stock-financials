@@ -1,6 +1,7 @@
 import csv
 import datetime
-import os
+
+from pathlib import Path
 
 from stock import StockStatistics, calculate_pe_ratio, calculate_peg_ratio
 from utils import get_string
@@ -8,16 +9,19 @@ from utils import get_string
 from database import init_db, save_to_db
 from yfinance_fetcher import fetch_stock_data
 
-def save_to_csv(record: StockStatistics, filename: str = 'history.csv') -> None:
+BASE_DIR = Path(__file__).resolve().parent.parent
+CSV_NAME = BASE_DIR / 'data' / 'history.csv'
+
+def save_to_csv(record: StockStatistics, filepath: Path = CSV_NAME) -> None:
     """
     Saves a record to a csv file.
     Creates the file if it does not exist.
     """
-    file_exists = os.path.isfile(filename)
+    file_exists = filepath.is_file()
     headers = ['Date', 'Symbol', 'Price', 'EPS', 'Growth Rate', 'PE ratio', 'PEG ratio']
     data    = [record.date, record.ticker, record.price, record.eps, record.eps_growth, record.pe_ratio, record.peg_ratio]
 
-    with open(filename, mode='a', newline='', encoding='utf-8') as f:
+    with open(filepath, mode='a', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
 
         if not file_exists:

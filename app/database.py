@@ -1,7 +1,9 @@
 import sqlite3
+from pathlib import Path
 from stock import StockStatistics
 
-DB_NAME = 'history.db'
+BASE_DIR = Path(__file__).resolve().parent.parent
+DB_NAME = BASE_DIR / 'data' / 'history.db'
 
 def init_db() -> None:
     """
