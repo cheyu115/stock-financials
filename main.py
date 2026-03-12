@@ -3,9 +3,10 @@ import datetime
 import os
 
 from stock import StockStatistics, calculate_pe_ratio, calculate_peg_ratio
-from utils import get_float, get_string
+from utils import get_string
 
 from database import init_db, save_to_db
+from yfinance_fetcher import fetch_stock_data
 
 def save_to_csv(record: StockStatistics, filename: str = 'history.csv') -> None:
     """
@@ -27,21 +28,26 @@ def save_to_csv(record: StockStatistics, filename: str = 'history.csv') -> None:
 def main():
     init_db()
 
-
     ticker  = get_string('ticker: ')
-    price = get_float('price: ')
-    eps = get_float('eps: ')
-    eps_growth = get_float('growth rate (%): ')
+    
+    print(f"fetch {ticker} data from yahoo finance.")
+    stock_data = fetch_stock_data(ticker)
 
-    pe_ratio = calculate_pe_ratio(price, eps)
-    peg_ratio = calculate_peg_ratio(pe_ratio, eps_growth)
+    if not stock_data:
+        print(f"fetch {ticker} data failed.")
+        return
+
+    pe_ratio = calculate_pe_ratio(stock_data.price, stock_data.eps)
+    peg_ratio = calculate_peg_ratio(pe_ratio, stock_data.eps_growth)
     today_str = str(datetime.date.today())
+
+    print(stock_data)
 
     record = StockStatistics(
         ticker=ticker,
-        price=price,
-        eps=eps,
-        eps_growth=eps_growth,
+        price=stock_data.price,
+        eps=stock_data.eps,
+        eps_growth=stock_data.eps_growth,
         pe_ratio=pe_ratio,
         peg_ratio=peg_ratio,
         date=today_str
@@ -53,5 +59,5 @@ def main():
     print(f'saves {record} to sqlite database (history.db).')
 
 if __name__ == "__main__":
-    print("test data: aapl, 268.8, 7.89, 9.37")
+    print("test data: aapl")
     main()
