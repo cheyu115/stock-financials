@@ -12,7 +12,16 @@ class StockStatistics:
         date        (str):      date of the record, formatted as 'YYYY-MM-DD'
     """
 
-    def __init__(self, ticker: str, price: float, eps: float, eps_growth: float, pe_ratio: float, peg_ratio: float, date: str) -> None:
+    def __init__(
+        self,
+        ticker: str,
+        price: float,
+        eps: float,
+        eps_growth: float,
+        pe_ratio: float,
+        peg_ratio: float,
+        date: str,
+    ) -> None:
         self.ticker = ticker
         self.price = price
         self.eps = eps
@@ -22,8 +31,9 @@ class StockStatistics:
         self.date = date
 
     def __str__(self) -> str:
-        return f'[{self.date}: Price={self.price}, PE={self.pe_ratio}, PEG={self.peg_ratio}]'
-    
+        return f"[{self.date}: Price={self.price}, PE={self.pe_ratio}, PEG={self.peg_ratio}]"
+
+
 def calculate_pe_ratio(price: float, eps: float) -> float:
     """
     Calculate the price to earnings (PE) ratio.
@@ -54,6 +64,8 @@ def calculate_peg_ratio(pe_ratio: float, eps_growth: float) -> float:
         return 0.0
     return round(pe_ratio / eps_growth, 2)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     import doctest
+
     doctest.testmod(verbose=True)

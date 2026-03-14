@@ -11,6 +11,7 @@ def get_string(prompt: str) -> str:
 
         print("輸入英文字母且不得留白")
 
+
 def get_float(prompt: str) -> float:
     """
     Prompts the user for a number.
