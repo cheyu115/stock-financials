@@ -9,3 +9,4 @@
 1. 參考 `database.md` 的規格，完成資料儲存的功能
 2. 參考 `yfinance.md` 的規格，完成透過 API 做資料的取得
 3. 參考 `api.md` 的規格，實作 API endpoint
+4. 參考 `frontend.md` 實作使用者介面 

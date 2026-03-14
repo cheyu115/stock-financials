@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Financials</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <style>
+    /* 讓整個 main 在畫面正中央 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* 移除了 container class 的干擾，現在 50vw 絕對會生效 */
+    main {
+      width: 50vw;
+      min-width: 320px; /* 手機版防破版 */
+      max-width: 800px; /* 加上一個合理的上限，避免在大螢幕(如 4K)上 50% 還是太長 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 讓內部的標題、表單、卡片都佔滿 main 的寬度，確保完美切齊 */
+    hgroup, form, article {
+      width: 100%;
+    }
+
+    hgroup {
+      text-align: center;
+    }
+
+    /* 解決高度不一致與按鈕排版 */
+    fieldset[role="group"] {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 0;
+    }
+    
+    fieldset[role="group"] input,
+    fieldset[role="group"] button {
+      margin-bottom: 0;
+      height: auto;
+    }
+
+    fieldset[role="group"] button {
+      width: 120px;
+      flex-shrink: 0;
+    }
+
+    .grid-result {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <hgroup>
+      <h1>Stock Financials</h1>
+      <p>極簡股票財務指標查詢系統</p>
+    </hgroup>
+
+    <form id="searchForm">
+      <fieldset role="group">
+        <input type="text" id="tickerInput" placeholder="輸入股票代碼，如 AAPL" required autocomplete="off" />
+        <button type="submit" id="searchBtn">查詢</button>
+      </fieldset>
+    </form>
+
+    <article id="resultCard" style="display: none;">
+      <header><strong id="resSymbol"></strong> 財務指標</header>
+      <div class="grid-result">
+        <div><strong>Price:</strong> $<span id="resPrice"></span></div>
+        <div><strong>EPS:</strong> <span id="resEps"></span></div>
+        <div><strong>PE Ratio:</strong> <span id="resPe"></span></div>
+        <div><strong>PEG Ratio:</strong> <span id="resPeg"></span></div>
+        <div><strong>Next Yr Growth:</strong> <span id="resGrowth"></span>%</div>
+      </div>
+    </article>
+
+    <article id="errorCard" style="display: none; border-color: var(--pico-del-color);">
+      <span style="color: var(--pico-del-color);" id="errorText"></span>
+    </article>
+  </main>
+
+  <script>
+    const API_BASE_URL = "http://127.0.0.1:8000/stock";
+
+    const searchForm = document.getElementById("searchForm");
+    const tickerInput = document.getElementById("tickerInput");
+    const searchBtn = document.getElementById("searchBtn");
+    const resultCard = document.getElementById("resultCard");
+    const errorCard = document.getElementById("errorCard");
+
+    searchForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const ticker = tickerInput.value.trim();
+      if (!ticker) return;
+
+      tickerInput.value = "";
+
+      searchBtn.setAttribute("aria-busy", "true");
+      searchBtn.textContent = "查詢中...";
+      searchBtn.disabled = true;
+      resultCard.style.display = "none";
+      errorCard.style.display = "none";
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/${ticker}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById("resSymbol").textContent = data.symbol;
+          document.getElementById("resPrice").textContent = data.price;
+          document.getElementById("resEps").textContent = data.eps;
+          document.getElementById("resPe").textContent = data.pe;
+          document.getElementById("resPeg").textContent = data.peg;
+          document.getElementById("resGrowth").textContent = data.growth;
+          resultCard.style.display = "block";
+        } else {
+          document.getElementById("errorText").textContent = data.detail || "發生未知錯誤";
+          errorCard.style.display = "block";
+        }
+      } catch (error) {
+        document.getElementById("errorText").textContent = "無法連線至伺服器，請確認後端 API 已啟動。";
+        errorCard.style.display = "block";
+      } finally {
+        searchBtn.removeAttribute("aria-busy");
+        searchBtn.textContent = "查詢";
+        searchBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

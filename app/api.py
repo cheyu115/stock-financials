@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from app.database import save_to_db
@@ -18,6 +19,11 @@ class StockResponse(BaseModel):
     pe: float
     growth: float
     peg: float
+
+
+@app.get("/")
+def serve_html():
+    return FileResponse("index.html")
 
 
 @app.get("/stock/{ticker}", response_model=StockResponse)
