@@ -7,6 +7,7 @@ from app.yfinance_fetcher import YfinanceData
 # 建立模擬瀏覽器發送請求的測試客戶端
 client = TestClient(app)
 
+
 # 魔法在這裡：攔截 app.api 裡面的 fetch_stock_data 函式
 @patch("app.api.fetch_stock_data")
 def test_get_stock_success(mock_fetch):
@@ -25,7 +26,8 @@ def test_get_stock_success(mock_fetch):
     assert data["symbol"] == "AAPL"
     assert data["price"] == 200.0
     assert data["pe"] == 20.0  # 200 / 10 = 20.0
-    assert data["peg"] == 1.33 # 20 / 15 = 1.33
+    assert data["peg"] == 1.33  # 20 / 15 = 1.33
+
 
 @patch("app.api.fetch_stock_data")
 def test_get_stock_not_found(mock_fetch):

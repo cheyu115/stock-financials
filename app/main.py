@@ -1,9 +1,8 @@
 import csv
-import datetime
 
 from pathlib import Path
 
-from app.stock import StockStatistics, calculate_pe_ratio, calculate_peg_ratio
+from app.stock import StockStatistics, create_stock_record
 from app.utils import get_string
 from app.database import init_db, save_to_db
 from app.yfinance_fetcher import fetch_stock_data
@@ -50,21 +49,7 @@ def main():
         print(f"fetch {ticker} data failed.")
         return
 
-    pe_ratio = calculate_pe_ratio(stock_data.price, stock_data.eps)
-    peg_ratio = calculate_peg_ratio(pe_ratio, stock_data.eps_growth)
-    today_str = str(datetime.date.today())
-
-    print(stock_data)
-
-    record = StockStatistics(
-        ticker=ticker,
-        price=stock_data.price,
-        eps=stock_data.eps,
-        eps_growth=stock_data.eps_growth,
-        pe_ratio=pe_ratio,
-        peg_ratio=peg_ratio,
-        date=today_str,
-    )
+    record = create_stock_record(ticker, stock_data)
 
     save_to_csv(record)
     print(f"saves {record} to file.")

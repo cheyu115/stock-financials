@@ -1,3 +1,7 @@
+import datetime
+from app.yfinance_fetcher import YfinanceData
+
+
 class StockStatistics:
     """
     Records the statistical metrics of a stock.
@@ -63,6 +67,26 @@ def calculate_peg_ratio(pe_ratio: float, eps_growth: float) -> float:
     if eps_growth <= 0:
         return 0.0
     return round(pe_ratio / eps_growth, 2)
+
+
+def create_stock_record(ticker: str, stock_data: YfinanceData) -> StockStatistics:
+    """
+    將外部抓取的 YfinanceData 轉換成我們內部的 StockStatistics 紀錄。
+    在這裡統一計算 PE, PEG 並壓上今天的日期。
+    """
+    pe_ratio = calculate_pe_ratio(stock_data.price, stock_data.eps)
+    peg_ratio = calculate_peg_ratio(pe_ratio, stock_data.eps_growth)
+    today_str = str(datetime.date.today())
+
+    return StockStatistics(
+        ticker=ticker.upper(),  # 統一轉成大寫
+        price=stock_data.price,
+        eps=stock_data.eps,
+        eps_growth=stock_data.eps_growth,
+        pe_ratio=pe_ratio,
+        peg_ratio=peg_ratio,
+        date=today_str,
+    )
 
 
 if __name__ == "__main__":
