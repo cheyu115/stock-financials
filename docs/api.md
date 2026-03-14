@@ -61,3 +61,5 @@ An HTTP request to endpoint
 ## refine
 
 1. 修正 `ModuleNotFoundError`
+2. 使用 mock 技術測試 API 定義的 200 OK 和 404 Not Found 兩種情況
+3. 修正 pytest 的 `ModuleNotFoundError`
