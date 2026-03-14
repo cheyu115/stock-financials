@@ -42,4 +42,8 @@ uv run pytest
 ```
 uv run uvicorn app.api:app --reload
 ```
-啟動後可至 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) 測試 API (Swagger UI)
+
+啟動後可至以下網址進行測試：
+
+- 前端 UI 介面: http://127.0.0.1:8000/
+- 後端 API (Swagger): http://127.0.0.1:8000/docs
