@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
 from app.database import save_to_db
 from app.stock import create_stock_record
@@ -10,8 +11,17 @@ from app.yfinance_fetcher import fetch_stock_data
 app = FastAPI(title="Stock Financials API")
 
 
-@app.get("/stock/{ticker}")
-def get_stock_info(ticker: str) -> dict:
+class StockResponse(BaseModel):
+    symbol: str
+    price: float
+    eps: float
+    pe: float
+    growth: float
+    peg: float
+
+
+@app.get("/stock/{ticker}", response_model=StockResponse)
+def get_stock_info(ticker: str) -> StockResponse:
     """
     Fetch stock data, calculate financial ratios, and save to the database.
 
@@ -37,11 +47,11 @@ def get_stock_info(ticker: str) -> dict:
     save_to_db(record)
 
     # 4. return json data
-    return {
-        "symbol": record.ticker,
-        "price": record.price,
-        "eps": record.eps,
-        "pe": record.pe_ratio,
-        "growth": record.eps_growth,
-        "peg": record.peg_ratio,
-    }
+    return StockResponse(
+        symbol=record.ticker,
+        price=record.price,
+        eps=record.eps,
+        pe=record.pe_ratio,
+        growth=record.eps_growth,
+        peg=record.peg_ratio,
+    )
