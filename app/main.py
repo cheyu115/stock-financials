@@ -1,10 +1,9 @@
 import csv
-
 from pathlib import Path
 
+from app.database import init_db, save_to_db
 from app.stock import StockStatistics, create_stock_record
 from app.utils import get_string
-from app.database import init_db, save_to_db
 from app.yfinance_fetcher import fetch_stock_data
 
 BASE_DIR = Path(__file__).resolve().parent.parent

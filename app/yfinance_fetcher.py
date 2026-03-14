@@ -1,7 +1,7 @@
-import yfinance as yf
-
 from dataclasses import dataclass
 from typing import Optional
+
+import yfinance as yf
 
 
 @dataclass

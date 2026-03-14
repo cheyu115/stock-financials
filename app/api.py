@@ -1,9 +1,10 @@
 from fastapi import FastAPI, HTTPException
 
+from app.database import save_to_db
+from app.stock import create_stock_record
+
 # 引入我們已經寫好的模組
 from app.yfinance_fetcher import fetch_stock_data
-from app.stock import create_stock_record
-from app.database import save_to_db
 
 # 建立 FastAPI 實例
 app = FastAPI(title="Stock Financials API")
