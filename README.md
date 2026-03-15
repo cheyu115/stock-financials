@@ -2,6 +2,8 @@
 
 使用 FastAPI 實作的服務，抓取股票數據、計算財務指標（PE/PEG）並儲存至 SQLite 資料庫。
 
+**Live Demo:** [https://stock-financials-pzv1.onrender.com/](https://stock-financials-pzv1.onrender.com/)
+
 ## Tools
 
 - 語言與環境: Python 3.13, uv
