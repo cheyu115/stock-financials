@@ -1,10 +1,11 @@
+import os
 import time
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from app.database import save_to_db
+from app.database import BASE_DIR, init_db, save_to_db  # 新增引入 init_db 和 BASE_DIR
 from app.stock import create_stock_record
 
 # 引入我們已經寫好的模組
@@ -12,6 +13,16 @@ from app.yfinance_fetcher import fetch_stock_data
 
 # 建立 FastAPI 實例
 app = FastAPI(title="Stock Financials API")
+
+
+@app.on_event("startup")
+def startup_event():
+    """伺服器啟動時，確保資料夾存在並初始化資料庫"""
+    data_dir = BASE_DIR / "data"
+    # 如果 data 資料夾不存在，就建立它 (包含父資料夾)
+    os.makedirs(data_dir, exist_ok=True)
+    # 初始化資料庫表格
+    init_db()
 
 
 class StockResponse(BaseModel):
