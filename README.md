@@ -41,7 +41,7 @@ uv run pytest
 ```
 
 3. 啟動伺服器
-```
+```bash
 uv run uvicorn app.api:app --reload
 ```
 
