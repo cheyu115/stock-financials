@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 
@@ -10,6 +11,9 @@ from app.stock import create_stock_record
 
 # 引入我們已經寫好的模組
 from app.yfinance_fetcher import fetch_stock_data
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # 建立 FastAPI 實例
 app = FastAPI(title="Stock Financials API")
@@ -95,7 +99,16 @@ def get_stock_info(ticker: str) -> StockResponse:
     symbol = ticker.upper()
 
     # 2. call `fetch_stock_data`, handle success/failure cases
-    stock_data = fetch_stock_data(symbol)
+    try:
+        stock_data = fetch_stock_data(symbol)
+    except RuntimeError as e:
+        # 使用 logging 紀錄底層拋出的 HTTP error 或 Runtime error
+        error_msg = str(e)
+        logger.error(f"抓取 {symbol} 股票資料失敗: {error_msg}")
+
+        # 轉換成 HTTP 502 (Bad Gateway) 告訴前端遠端伺服器出錯
+        raise HTTPException(status_code=502, detail=error_msg)
+
     if not stock_data:
         raise HTTPException(status_code=404, detail=f"Failed to find ticker: {symbol}")
 

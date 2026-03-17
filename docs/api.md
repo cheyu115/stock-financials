@@ -64,3 +64,4 @@ An HTTP request to endpoint
 2. 使用 mock 技術測試 API 定義的 200 OK 和 404 Not Found 兩種情況
 3. 修正 pytest 的 `ModuleNotFoundError`
 4. 採用 DRY 原則重構 main.py 和 api.py 中重複的 PE, PEG 的計算，以及 StockStatistics record 的建立
+5. 參考 app.yfinance_fetcher 的 fetch_stock_data 實作，在 "/stock/{ticker}" 這個 endpoint 中使用 logging 紀錄新增的 HTTP error 和 Runtime error

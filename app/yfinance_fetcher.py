@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 import yfinance as yf
+from requests.exceptions import HTTPError
 
 
 @dataclass
@@ -32,9 +33,13 @@ def fetch_stock_data(ticker_symbol: str) -> Optional[YfinanceData]:
     try:
         stock = yf.Ticker(ticker_symbol)
         info = stock.info
-    except Exception:
-        # 捕捉網路斷線或 yfinance 套件本身的 Exception
-        return None
+    except HTTPError as e:
+        # 捕捉 HTTP 錯誤
+        status_code = e.response.status_code if e.response else "Unknown"
+        raise RuntimeError(f"Yahoo Finance 拒絕連線 (HTTP {status_code})")
+    except Exception as e:
+        # 捕捉其他未知的套件錯誤或網路斷線
+        raise RuntimeError(f"yfinance 套件發生內部錯誤: {str(e)}")
 
     # 1. 取得目前報價 (若無 currentPrice，嘗試 previousClose)
     price = info.get("currentPrice") or info.get("previousClose")
