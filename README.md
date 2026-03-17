@@ -53,3 +53,11 @@ curl -H "User-Agent: Mozilla/5.0" http://127.0.0.1:8000/stock/aapl
 - 後端框架: FastAPI, Uvicorn
 - 測試工具: pytest, unittest.mock
 - 資料處理: yfinance, sqlite3
+
+## Live Demo
+
+因為 `yfinance` 依賴爬蟲機制，查詢時有極高機率會觸發 Yahoo Finance 的 IP 封鎖導致查詢失敗。
+```
+yfinance 套件發生內部錯誤: Too Many Requests. Rate limited. Try after a while.
+```
+https://stock-financials-pzv1.onrender.com/
