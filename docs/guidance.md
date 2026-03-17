@@ -19,8 +19,8 @@
 ### 資料快取 (api)
 先查詢資料庫是否已經存在「當天日期+股票代碼」的紀錄，若有則直接回傳，沒有才查詢API
 
-### API 安全 (api)
-針對同一ip請求的rate limiting
+### 更好的 API 安全 (api)
+針對同一ip請求的rate limiting，使用slowapi 和 redis，或至少先在檔案做dict持久化。時間限制也應該做成 sliding window
 
 ### 環境變數
 像是資料庫名稱和csv文件檔名應儲存在環境變數
