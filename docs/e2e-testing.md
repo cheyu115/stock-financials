@@ -24,6 +24,10 @@
 
 - 使用 pytest 撰寫 stock.py 中 calculate_pe_ratio 和 calculate_peg_ratio 的測試，包含 happy path, sad path, edge case
 
+## 新增 github action CI
+
+- 在每一次 push 和 merge 時安裝環境和執行 pytest
+
 ## Refine
 
 - API 的錯誤處理產生了變更，確認 api 和 yfinance_fetcher 的實作。更新現有的 test_api 模組，並告知我新版本如何對齊實作

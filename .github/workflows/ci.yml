@@ -1,0 +1,36 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 將你的程式碼 Checkout 到虛擬機上
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 安裝超快的 uv 套件管理器
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      # 3. 設定 Python 3.13 (對齊你專案的 .python-version)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # 4. 安裝依賴 (uv sync 會自動讀取 uv.lock，確保環境 100% 一致)
+      - name: Install dependencies
+        run: uv sync
+
+      # 5. 執行我們寫好的 Pytest
+      - name: Run pytest
+        run: uv run pytest -v
