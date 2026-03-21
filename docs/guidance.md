@@ -16,7 +16,7 @@
 ### End-to-End testing
 模仿使用者實際操作時的情況
 
-### 更好的測試
+### (done) 更好的測試 (e2e-testing)
 覆蓋核心計算邏輯(stock.py)和更多邊緣案例
 
 ### 資料快取 (api)

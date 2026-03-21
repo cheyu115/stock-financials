@@ -51,7 +51,7 @@ def calculate_pe_ratio(price: float, eps: float) -> float:
     """
     if eps <= 0:
         return 0.0
-    return round(price / eps, 1)
+    return round(price / eps, 2)
 
 
 def calculate_peg_ratio(pe_ratio: float, eps_growth: float) -> float:
