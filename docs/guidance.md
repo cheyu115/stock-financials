@@ -30,3 +30,7 @@
 
 ### (done) 更好的錯誤處理 (api + yfinance)
 不應該忽略錯誤，此外，當錯誤發生時要產生log
+
+### (done) 重構 API 的生命週期
+
+用 lifespan 替換已經棄用的 on_event

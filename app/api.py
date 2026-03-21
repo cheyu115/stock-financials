@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
@@ -15,18 +16,19 @@ from app.yfinance_fetcher import fetch_stock_data
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# 建立 FastAPI 實例
-app = FastAPI(title="Stock Financials API")
 
-
-@app.on_event("startup")
-def startup_event():
+# --- 改用現代的 lifespan 取代 on_event ---
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     """伺服器啟動時，確保資料夾存在並初始化資料庫"""
     data_dir = BASE_DIR / "data"
-    # 如果 data 資料夾不存在，就建立它 (包含父資料夾)
     os.makedirs(data_dir, exist_ok=True)
-    # 初始化資料庫表格
     init_db()
+    yield  # 交出控制權讓應用程式運行
+
+
+# 建立 FastAPI 實例，並綁定 lifespan
+app = FastAPI(title="Stock Financials API", lifespan=lifespan)
 
 
 class StockResponse(BaseModel):

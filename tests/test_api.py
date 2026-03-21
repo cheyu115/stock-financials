@@ -1,12 +1,18 @@
 from unittest.mock import patch
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.api import app, verify_client_and_rate_limit
 from app.yfinance_fetcher import YfinanceData
 
-# 建立模擬瀏覽器發送請求的測試客戶端
-client = TestClient(app)
+
+# 1. 寫成 Fixture，並使用 with 區塊！
+# 這樣 FastAPI 才會執行 lifespan 幫你把 data 資料夾建出來
+@pytest.fixture
+def client():
+    with TestClient(app) as c:
+        yield c
 
 
 # --- 新增這段：解除測試時的封印 ---
@@ -15,12 +21,18 @@ def skip_rate_limit():
     pass
 
 
-app.dependency_overrides[verify_client_and_rate_limit] = skip_rate_limit
+@pytest.fixture(autouse=True)
+def disable_rate_limit():
+    # 測試前：掛上假警衛
+    app.dependency_overrides[verify_client_and_rate_limit] = skip_rate_limit
+    yield
+    # 測試後：清除覆寫，恢復原始狀態，避免污染其他測試
+    app.dependency_overrides.clear()
 
 
 # 魔法在這裡：攔截 app.api 裡面的 fetch_stock_data 函式
 @patch("app.api.fetch_stock_data")
-def test_get_stock_success(mock_fetch):
+def test_get_stock_success(mock_fetch, client):
     """
     測試 200 OK 成功情況
     """
@@ -40,7 +52,7 @@ def test_get_stock_success(mock_fetch):
 
 
 @patch("app.api.fetch_stock_data")
-def test_get_stock_not_found(mock_fetch):
+def test_get_stock_not_found(mock_fetch, client):
     """
     測試 404 Not Found 失敗情況
     """
@@ -56,7 +68,7 @@ def test_get_stock_not_found(mock_fetch):
 
 
 @patch("app.api.fetch_stock_data")
-def test_get_stock_bad_gateway(mock_fetch):
+def test_get_stock_bad_gateway(mock_fetch, client):
     """
     測試 502 Bad Gateway 失敗情況 (網路或套件錯誤)
     """
