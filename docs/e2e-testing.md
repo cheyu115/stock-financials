@@ -27,3 +27,4 @@
 ## Refine
 
 - API 的錯誤處理產生了變更，確認 api 和 yfinance_fetcher 的實作。更新現有的 test_api 模組，並告知我新版本如何對齊實作
+- pytest 對 API 的測試被限有的限流策略阻擋，講解原因和解決方案

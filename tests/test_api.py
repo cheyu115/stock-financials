@@ -2,11 +2,20 @@ from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
-from app.api import app
+from app.api import app, verify_client_and_rate_limit
 from app.yfinance_fetcher import YfinanceData
 
 # 建立模擬瀏覽器發送請求的測試客戶端
 client = TestClient(app)
+
+
+# --- 新增這段：解除測試時的封印 ---
+def skip_rate_limit():
+    """假的限流函式，什麼都不做，直接放行"""
+    pass
+
+
+app.dependency_overrides[verify_client_and_rate_limit] = skip_rate_limit
 
 
 # 魔法在這裡：攔截 app.api 裡面的 fetch_stock_data 函式
@@ -44,3 +53,21 @@ def test_get_stock_not_found(mock_fetch):
     # 3. 檢查是不是真的吐出 404 和正確的錯誤訊息
     assert response.status_code == 404
     assert response.json()["detail"] == "Failed to find ticker: INVALID"
+
+
+@patch("app.api.fetch_stock_data")
+def test_get_stock_bad_gateway(mock_fetch):
+    """
+    測試 502 Bad Gateway 失敗情況 (網路或套件錯誤)
+    """
+    # 模擬 fetch_stock_data 拋出 RuntimeError (而不是回傳值)
+    error_msg = (
+        "yfinance 套件發生內部錯誤: Too Many Requests. Rate limited. Try after a while."
+    )
+    mock_fetch.side_effect = RuntimeError(error_msg)
+
+    response = client.get("/stock/AAPL")
+
+    # 檢查 API 是否成功捕捉 RuntimeError 並轉換成 502
+    assert response.status_code == 502
+    assert response.json()["detail"] == error_msg
