@@ -1,0 +1,15 @@
+# Virtual environments
+.venv/
+venv/
+
+# Cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Git
+.git/
+
+# Database files (避免把主機的測試資料庫包進 Image 裡)
+data/

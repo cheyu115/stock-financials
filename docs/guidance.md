@@ -25,12 +25,11 @@
 ### 更好的 API 安全 (api)
 針對同一ip請求的rate limiting，使用slowapi 和 redis，或至少先在檔案做dict持久化。時間限制也應該做成 sliding window
 
-### 環境變數
-像是資料庫名稱和csv文件檔名應儲存在環境變數
+### 設定集中式的路徑配置和初始化機制 (api + database)
+建立資料夾應該只發生在一個地方
 
 ### (done) 更好的錯誤處理 (api + yfinance)
 不應該忽略錯誤，此外，當錯誤發生時要產生log
 
 ### (done) 重構 API 的生命週期
-
 用 lifespan 替換已經棄用的 on_event

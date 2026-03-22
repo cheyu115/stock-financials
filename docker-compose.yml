@@ -1,0 +1,13 @@
+services:
+  stock-api:
+    build: .
+    container_name: stock_financials_app
+    ports:
+      - "8000:8000"
+    volumes:
+      # 將主機的 data 資料夾掛載進容器，確保資料庫檔案 (.db) 存放在你的實體硬碟上
+      - ./data:/app/data:z
+    environment:
+      # 強迫 Python 即時輸出 Log，方便我們用 docker logs 觀察
+      - PYTHONUNBUFFERED=1
+    restart: always
