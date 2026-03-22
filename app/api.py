@@ -1,5 +1,4 @@
 import logging
-import os
 import time
 from contextlib import asynccontextmanager
 
@@ -7,7 +6,7 @@ from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from app.database import BASE_DIR, init_db, save_to_db  # 新增引入 init_db 和 BASE_DIR
+from app.database import init_db, save_to_db
 from app.stock import create_stock_record
 
 # 引入我們已經寫好的模組
@@ -21,8 +20,6 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """伺服器啟動時，確保資料夾存在並初始化資料庫"""
-    data_dir = BASE_DIR / "data"
-    os.makedirs(data_dir, exist_ok=True)
     init_db()
     yield  # 交出控制權讓應用程式運行
 

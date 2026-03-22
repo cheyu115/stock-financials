@@ -25,7 +25,7 @@
 ### 更好的 API 安全 (api)
 針對同一ip請求的rate limiting，使用slowapi 和 redis，或至少先在檔案做dict持久化。時間限制也應該做成 sliding window
 
-### 設定集中式的路徑配置和初始化機制 (api + database)
+### (done) 設定集中式的路徑配置和初始化機制 (api + database)
 建立資料夾應該只發生在一個地方
 
 ### (done) 更好的錯誤處理 (api + yfinance)

@@ -1,16 +1,20 @@
+import os
 import sqlite3
 from pathlib import Path
 
 from app.stock import StockStatistics
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DB_NAME = BASE_DIR / "data" / "history.db"
+DATA_DIR = BASE_DIR / "data"
+DB_NAME = DATA_DIR / "history.db"
 
 
 def init_db() -> None:
     """
     初始化資料庫。如果資料庫不存在，建立 "history.db" 並初始化資料表。
     """
+    os.makedirs(DATA_DIR, exist_ok=True)
+
     # 建立連線 (若檔案不存在會自動建立)
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
