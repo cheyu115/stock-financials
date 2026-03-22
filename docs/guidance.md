@@ -13,17 +13,8 @@
 
 # Todos
 
-### End-to-End testing
-模仿使用者實際操作時的情況
-
 ### (done) 更好的測試 (e2e-testing)
 覆蓋核心計算邏輯(stock.py)和更多邊緣案例
-
-### 資料快取 (api)
-先查詢資料庫是否已經存在「當天日期+股票代碼」的紀錄，若有則直接回傳，沒有才查詢API
-
-### 更好的 API 安全 (api)
-針對同一ip請求的rate limiting，使用slowapi 和 redis，或至少先在檔案做dict持久化。時間限制也應該做成 sliding window
 
 ### (done) 設定集中式的路徑配置和初始化機制 (api + database)
 建立資料夾應該只發生在一個地方
