@@ -9,5 +9,6 @@ wheels/
 # Virtual environments
 .venv
 
-# db
-data/
+# data folder (excludes db files)
+data/*
+!data/.gitkeep

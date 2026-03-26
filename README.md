@@ -53,12 +53,6 @@ curl -H "User-Agent: Mozilla/5.0" http://127.0.0.1:8000/stock/aapl
 
 ## Docker
 
-1. 建立 /data 資料夾
-```bash
-mkdir data
-```
-
-2. 啟動
 ```bash
 docker compose up -d
 ```
