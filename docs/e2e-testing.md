@@ -32,3 +32,4 @@
 
 - API 的錯誤處理產生了變更，確認 api 和 yfinance_fetcher 的實作。更新現有的 test_api 模組，並告知我新版本如何對齊實作
 - pytest 對 API 的測試被限有的限流策略阻擋，講解原因和解決方案
+- test_api 會失敗。因為 data/history.db 是在 docker 服務啟動時建立的，所以 local 沒有權限。因為這個檔案的 owner 是 root。讓 api 在測試的時候去建立和讀取另一個資料庫

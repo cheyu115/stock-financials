@@ -7,10 +7,22 @@ from app.api import app, verify_client_and_rate_limit
 from app.yfinance_fetcher import YfinanceData
 
 
+@pytest.fixture
+def setup_test_db(tmp_path):
+    """
+    使用 pytest 內建的 tmp_path 建立一個暫存資料庫路徑。
+    透過 patch 將 app.database.DB_NAME 替換成這個暫存檔，
+    確保測試不會污染真實資料庫，也避開 Docker root 的權限問題。
+    """
+    test_db = tmp_path / "test_history.db"
+    with patch("app.database.DB_NAME", str(test_db)):
+        yield
+
+
 # 1. 寫成 Fixture，並使用 with 區塊！
 # 這樣 FastAPI 才會執行 lifespan 幫你把 data 資料夾建出來
 @pytest.fixture
-def client():
+def client(setup_test_db):
     with TestClient(app) as c:
         yield c
 
