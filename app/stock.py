@@ -39,35 +39,23 @@ class StockStatistics:
         return f"[{self.date}: Price={self.price}, PE={self.pe_ratio}, PEG={self.peg_ratio}]"
 
 
-def calculate_pe_ratio(price: float, eps: float) -> float:
-    """
-    Calculate the price to earnings (PE) ratio.
-    Formula: price / EPS
+def _valid_positive(x: float) -> bool:
+    """返回 True 當且僅當 x 是正數。"""
+    return x > 0
 
-    >>> calculate_pe_ratio(400, 0)
-    0.0
-    >>> calculate_pe_ratio(400, 20)
-    20.0
-    """
-    if eps <= 0:
-        return 0.0
-    return round(price / eps, 2)
+
+def calculate_pe_ratio(price: float, eps: float) -> float:
+    """Price‑to‑Earnings (PE) ratio."""
+    if _valid_positive(price) and _valid_positive(eps):
+        return round(price / eps, 2)
+    return 0.0
 
 
 def calculate_peg_ratio(pe_ratio: float, eps_growth: float) -> float:
-    """
-    Calculate the PEG ratio.
-    Formula: PE ratio / growth rate
-
-    growth rate: yahoo finance analysis -> growth estimates -> next year column
-    >>> calculate_peg_ratio(25, 0)
-    0.0
-    >>> calculate_peg_ratio(25, 15)
-    1.67
-    """
-    if eps_growth <= 0:
-        return 0.0
-    return round(pe_ratio / eps_growth, 2)
+    """PEG ratio = PE / growth rate."""
+    if _valid_positive(pe_ratio) and _valid_positive(eps_growth):
+        return round(pe_ratio / eps_growth, 2)
+    return 0.0
 
 
 def create_stock_record(ticker: str, stock_data: YfinanceData) -> StockStatistics:
