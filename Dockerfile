@@ -16,11 +16,17 @@ RUN uv sync --frozen --no-dev
 # 6. 複製專案原始碼與靜態檔案
 COPY . .
 
-# 7. 建立 SQLite 存放資料的目錄
+# 7. 建立非 root 使用者，並將 /app 的擁有權交給他
+RUN useradd -m appuser && chown -R appuser:appuser /app
+
+# 8. 切換到非 root 使用者
+USER appuser
+
+# 9. 建立 SQLite 存放資料的目錄
 RUN mkdir -p /app/data
 
-# 8. 暴露 FastAPI 埠號
+# 10. 暴露 FastAPI 埠號
 EXPOSE 8000
 
-# 9. 啟動服務 (注意：必須綁定 0.0.0.0 才能讓容器外訪問)
+# 11. 啟動服務 (注意：必須綁定 0.0.0.0 才能讓容器外訪問)
 CMD ["uv", "run", "uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]
